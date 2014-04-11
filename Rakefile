@@ -1,7 +1,7 @@
 namespace :deploy do
   desc 'Deploy the app'
   task :production do
-    app = "github-repository-sync"
+    app = "github-publisher"
     remote = "git@heroku.com:#{app}.git"
 
     system "heroku maintenance:on --app #{app}"
