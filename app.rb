@@ -53,6 +53,7 @@ class Publisher < Sinatra::Base
         clone_repo(tmpdir)
         Dir.chdir "#{tmpdir}/#{@repo}" do
           setup_git
+          `bundle install`
           `bundle exec rake publish`
         end
       end
