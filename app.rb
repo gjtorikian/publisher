@@ -25,6 +25,8 @@ class Publisher < Sinatra::Base
 
   post "/build" do
     do_the_work
+
+    puts "You did it!"
   end
 
   helpers do
@@ -52,8 +54,8 @@ class Publisher < Sinatra::Base
         clone_repo(tmpdir)
         Dir.chdir "#{tmpdir}/#{@repo}" do
           setup_git
-          `bundle install`
-          `bundle exec rake publish`
+          puts "Rake publishing..."
+          puts `bundle exec rake publish no_commit_msg=true`
         end
       end
     end
