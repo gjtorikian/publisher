@@ -62,7 +62,7 @@ class Publisher < Sinatra::Base
         Dir.chdir "#{tmpdir}/#{@repo}" do
           setup_git
           # wipe out html/proofer, because its dependency on ffi conflicts with rubypython@0.5.1
-          `sed -i.bak -e "s/require 'html\/proofer'/ /" Rakefile`
+          File.open("Rakefile", "r+") { |f| f.write(f.read.sub(/require 'html\/proofer'/, '')) }
           puts "Rake publishing..."
           puts `bundle exec rake publish no_commit_msg=true`
         end
