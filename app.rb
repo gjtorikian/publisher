@@ -3,6 +3,8 @@ require 'json'
 require 'fileutils'
 require 'git'
 
+# this is some crazy workaround for pygments.rb + Heroku
+# that actually works: http://git.io/xBuMkg
 if ENV['IS_HEROKU']
   require 'rubypython'
   RubyPython.start(:python_exe => "python2.6")
