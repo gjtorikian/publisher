@@ -19,7 +19,7 @@ group :production, :development do
   gem 'mime-types', '~> 1.16'
   gem 'nanoc', '~> 3.4.3'
   gem 'nokogiri', '~> 1.6.0'
-  gem 'pygments.rb'
+  gem "pygments.rb", "= 0.1.3"
   gem 'yajl-ruby', '~> 0.8.2'
   gem "rubypython", "0.5.1"
 end
