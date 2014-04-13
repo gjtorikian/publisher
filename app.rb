@@ -3,6 +3,11 @@ require 'json'
 require 'fileutils'
 require 'git'
 
+if ENV['IS_HEROKU']
+  require 'rubypython'
+  RubyPython.start(:python_exe => "python")
+end
+
 class Publisher < Sinatra::Base
   set :root, File.dirname(__FILE__)
 
