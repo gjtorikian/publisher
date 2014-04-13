@@ -21,7 +21,6 @@ group :production, :development do
   gem 'nokogiri', '~> 1.6.0'
   gem 'pygments.rb'
   gem 'yajl-ruby', '~> 0.8.2'
-  gem 'html-proofer'
   gem "rubypython", "0.5.1"
 end
 
