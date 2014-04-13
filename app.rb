@@ -61,8 +61,6 @@ class Publisher < Sinatra::Base
         clone_repo(tmpdir)
         Dir.chdir "#{tmpdir}/#{@repo}" do
           setup_git
-          # wipe out html/proofer, because its dependency on ffi conflicts with rubypython@0.5.1
-          File.open("Rakefile", "r+") { |f| f.write(f.read.sub(/require 'html\/proofer'/, '')) }
           puts "Rake publishing..."
           puts `bundle exec rake publish no_commit_msg=true`
         end
