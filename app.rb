@@ -2,7 +2,6 @@ require 'sinatra/base'
 require 'json'
 require 'fileutils'
 require 'git'
-require 'octokit'
 
 class Publisher < Sinatra::Base
   set :root, File.dirname(__FILE__)
