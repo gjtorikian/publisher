@@ -22,6 +22,7 @@ group :production, :development do
   gem 'pygments.rb'
   gem 'yajl-ruby', '~> 0.8.2'
   gem 'html-proofer'
+  gem "rubypython", "0.5.1"
 end
 
 group :development do
