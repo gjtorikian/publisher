@@ -1,25 +1,36 @@
-require 'sinatra/base'
-require 'json'
-require 'fileutils'
-require 'git'
+require "sinatra/base"
+require "json"
+require "fileutils"
+require "octokit"
+require "resque"
+require "redis"
+require "openssl"
+require "base64"
 
-# this is some crazy workaround for pygments.rb + Heroku
-# that actually works: http://git.io/xBuMkg
-if ENV['IS_HEROKU']
-  require 'rubypython'
-  RubyPython.start(:python_exe => "python2.6")
-end
+require './build_job'
+
 
 class Publisher < Sinatra::Base
   set :root, File.dirname(__FILE__)
 
-  # "Thin is a supremely better performing web server so do please use it!"
-  set :server, %w[thin webrick]
+  configure do
+    if ENV['RACK_ENV'] == "production"
+      uri = URI.parse( ENV[ "REDISTOGO_URL" ])
+      REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+      Resque.redis = REDIS
+    else
+      Resque.redis = Redis.new
+    end
+  end
 
   before do
     # trim trailing slashes
     request.path_info.sub! %r{/$}, ''
     pass unless %w[build].include? request.path_info.split('/')[1]
+    # ensure signature is correct
+    request.body.rewind
+    payload_body = request.body.read
+    verify_signature(payload_body)
     # keep some important vars
     @payload = JSON.parse params[:payload]
     @repo = "#{@payload["repository"]["owner"]["name"]}/#{@payload["repository"]["name"]}"
@@ -38,18 +49,17 @@ class Publisher < Sinatra::Base
 
   helpers do
 
+    def verify_signature(payload_body)
+      signature = 'sha1=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest::Digest.new('sha1'), ENV['SECRET_TOKEN'], payload_body)
+      return halt 500, "Signatures didn't match!" unless Rack::Utils.secure_compare(signature, request.env['HTTP_X_HUB_SIGNATURE'])
+    end
+
     def check_params(params)
-      return halt 500, "Tokens didn't match!" unless valid_token?(params[:token])
       return halt 202, "Payload was not for master, aborting." unless master_branch?(@payload)
     end
 
-    def valid_token?(token)
-      return true if Sinatra::Base.development?
-      params[:token] == ENV["BUILD_TOKEN"]
-    end
-
     def token
-      ENV["HUBOT_GITHUB_TOKEN"]
+      ENV["MACHINE_USER_TOKEN"]
     end
 
     def master_branch?(payload)
@@ -58,12 +68,13 @@ class Publisher < Sinatra::Base
 
     def do_the_work
       in_tmpdir do |tmpdir|
-        clone_repo(tmpdir)
-        Dir.chdir "#{tmpdir}/#{@repo}" do
-          setup_git
-          puts "Rake publishing..."
-          puts `bundle exec rake publish no_commit_msg=true`
-        end
+        Resque.enqueue(BuildJob, tmpdir, token, @repo)
+        # clone_repo(tmpdir)
+        # Dir.chdir "#{tmpdir}/#{@repo}" do
+        #   setup_git
+        #   puts "Rake publishing..."
+        #   puts `bundle exec rake publish no_commit_msg=true`
+        # end
       end
     end
 
