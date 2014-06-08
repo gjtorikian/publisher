@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 ruby '2.0.0'
 
 gem 'sinatra', '1.4.2'
-gem 'thin'
+gem 'unicorn', "~> 4.8"
 gem 'json', '~> 1.7.7'
 gem 'rake'
 gem 'git', '~> 1.2.6'
