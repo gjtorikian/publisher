@@ -9,7 +9,6 @@ require "base64"
 
 require './build_job'
 
-
 class Publisher < Sinatra::Base
   set :root, File.dirname(__FILE__)
 
@@ -34,6 +33,7 @@ class Publisher < Sinatra::Base
     # keep some important vars
     @payload = JSON.parse params[:payload]
     @repo = "#{@payload["repository"]["owner"]["name"]}/#{@payload["repository"]["name"]}"
+    @lang = params[:lang]
     check_params params
   end
 
@@ -43,8 +43,6 @@ class Publisher < Sinatra::Base
 
   post "/build" do
     do_the_work
-
-    puts "You did it!"
   end
 
   helpers do
@@ -68,13 +66,7 @@ class Publisher < Sinatra::Base
 
     def do_the_work
       in_tmpdir do |tmpdir|
-        Resque.enqueue(BuildJob, tmpdir, token, @repo)
-        # clone_repo(tmpdir)
-        # Dir.chdir "#{tmpdir}/#{@repo}" do
-        #   setup_git
-        #   puts "Rake publishing..."
-        #   puts `bundle exec rake publish no_commit_msg=true`
-        # end
+        Resque.enqueue(BuildJob, tmpdir, token, @repo, @lang)
       end
     end
 
@@ -84,21 +76,7 @@ class Publisher < Sinatra::Base
       puts "Directory created at: #{path}"
       yield path
     ensure
-      FileUtils.rm_rf( path ) if File.exists?( path ) && !Sinatra::Base.development?
-    end
-
-    def clone_repo(tmpdir)
-      puts "Cloning #{@repo}..."
-      @git_dir = Git.clone(clone_url_with_token(@repo), "#{tmpdir}/#{@repo}")
-    end
-
-    def setup_git
-     @git_dir.config('user.name', 'Hubot')
-     @git_dir.config('user.email', 'cwanstrath+hubot@gmail.com')
-    end
-
-    def clone_url_with_token(repo)
-      "https://#{token}:x-oauth-basic@github.com/#{repo}.git"
+      # FileUtils.rm_rf( path ) if File.exists?( path ) && !Sinatra::Base.development?
     end
   end
 end

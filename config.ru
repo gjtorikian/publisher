@@ -6,5 +6,5 @@ Resque::Server.use Rack::Auth::Basic do |username, password|
 end
 
 run Rack::URLMap.new \
-  "/"       => RepositorySync,
+  "/"       => Publisher,
   "/resque" => Resque::Server.new
