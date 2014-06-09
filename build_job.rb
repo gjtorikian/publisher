@@ -8,8 +8,8 @@ class BuildJob
     Dir.chdir "#{tmpdir}/#{repo}" do
       setup_git
       # fetch gh-pages then hop back to master
-      puts `git checkout --track origin/gh-pages`
-      puts `git checkout master`
+      @git_dir.branch('gh-pages').checkout
+      @git_dir.branch('master').checkout
       Bundler.with_clean_env do
         puts "Installing gems..."
         puts `bundle install`
