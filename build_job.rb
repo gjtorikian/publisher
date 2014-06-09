@@ -8,15 +8,13 @@ class BuildJob
     Dir.chdir "#{tmpdir}/#{repo}" do
       setup_git
       # fetch gh-pages then hop back to master
-      `git checkout --track origin/gh-pages`
-      Git.checkout
+      puts `git checkout --track origin/gh-pages`
+      puts `git checkout master`
       Bundler.with_clean_env do
         puts "Installing gems..."
-        bundle_install = `bundle install`
-        puts bundle_install
+        puts `bundle install`
         puts "Publishin'..."
-        rake_publish = `bundle exec rake publish[true]`
-        puts rake_publish
+        puts `bundle exec rake publish[true]`
         puts "Published!"
       end
     end
