@@ -22,7 +22,7 @@ GEM
     rack-protection (1.5.3)
       rack
     raindrops (0.13.0)
-    rake (10.2.2)
+    rake (10.3.2)
     redis (3.0.7)
     redis-namespace (1.4.1)
       redis (~> 3.0.4)
