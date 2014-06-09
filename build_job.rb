@@ -5,7 +5,6 @@ class BuildJob
 
   def self.perform(tmpdir, token, repo, lang=nil)
     clone_repo(repo, token, tmpdir)
-    puts "#{tmpdir}/#{repo}"
     Dir.chdir "#{tmpdir}/#{repo}" do
       setup_git
       # fetch gh-pages then hop back to master
