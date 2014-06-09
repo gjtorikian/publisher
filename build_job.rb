@@ -9,6 +9,7 @@ class BuildJob
       setup_git
       Bundler.with_clean_env do
         # fetch gh-pages then hop back to master
+        puts `git fetch --all`
         @git_dir.branch('gh-pages').checkout
         @git_dir.branch('master').checkout
         puts "Installing gems..."
