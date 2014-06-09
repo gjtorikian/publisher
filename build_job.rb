@@ -7,10 +7,10 @@ class BuildJob
     clone_repo(repo, token, tmpdir)
     Dir.chdir "#{tmpdir}/#{repo}" do
       setup_git
-      # fetch gh-pages then hop back to master
-      @git_dir.branch('gh-pages').checkout
-      @git_dir.branch('master').checkout
       Bundler.with_clean_env do
+        # fetch gh-pages then hop back to master
+        @git_dir.branch('gh-pages').checkout
+        @git_dir.branch('master').checkout
         puts "Installing gems..."
         puts `bundle install`
         puts "Publishin'..."
