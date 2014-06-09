@@ -76,7 +76,7 @@ class Publisher < Sinatra::Base
       puts "Directory created at: #{path}"
       yield path
     ensure
-      # FileUtils.rm_rf( path ) if File.exists?( path ) && !Sinatra::Base.development?
+      FileUtils.rm_rf( path ) if File.exists?( path ) && !Sinatra::Base.development?
     end
   end
 end
