@@ -1,10 +1,11 @@
 source 'https://rubygems.org'
+ruby '2.2.2'
 
-gem 'sinatra', '1.4.2'
+gem 'sinatra', '1.4'
 gem 'unicorn', '~> 4.8'
-gem 'json', '~> 1.7.7'
+gem 'json', '~> 1.8'
 gem 'rake'
-gem 'git', '~> 1.2.6'
+gem 'git', '~> 1.2'
 gem 'octokit', '~> 2.0'
 gem 'resque', '~> 1.25'
 
