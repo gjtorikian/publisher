@@ -4,7 +4,7 @@ require_relative './config/redis'
 task 'resque:setup' do
   configure_redis
   ENV['QUEUE'] = '*'
-  require_relative './lib/clone_job'
+  require_relative './lib/build_job'
 end
 
 if ENV['RACK_ENV'] != 'production'
