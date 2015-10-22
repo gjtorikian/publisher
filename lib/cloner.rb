@@ -139,8 +139,14 @@ class Cloner
   end
 
   def install
+    begin
     logger.info 'Installing gems...'
-    logger.info `bundle install`
+      logger.info `bundle install`
+      logger.info 'Installing modules...'
+      logger.info `npm install`
+    rescue Exception => error
+      logger.error "Couldn\'t install dependencies! #{e}"
+    end
   end
 
   def build_docs
