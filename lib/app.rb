@@ -43,7 +43,6 @@ class Publisher < Sinatra::Base
 
     # keep some important vars
     process_payload(@payload)
-    @destination_hostname = params[:destination_hostname] || 'github.com'
 
     Resque.enqueue(BuildJob, @sha, @originating_hostname, @originating_repo)
   end
