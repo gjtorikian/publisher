@@ -13,13 +13,7 @@ class Publisher < Sinatra::Base
   set :root, File.dirname(__FILE__)
 
   configure do
-    if ENV['RACK_ENV'] == "production"
-      uri = URI.parse( ENV[ "REDISTOGO_URL" ])
-      REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
-      Resque.redis = REDIS
-    else
-      Resque.redis = Redis.new
-    end
+    configure_redis
   end
 
   before do
