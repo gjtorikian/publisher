@@ -10,9 +10,6 @@ export RUBY_HEAP_MIN_SLOTS=800000
 export RUBY_HEAP_FREE_MIN=100000
 export RUBY_HEAP_SLOTS_INCREMENT=400000
 export RUBY_HEAP_SLOTS_GROWTH_FACTOR=1
-
-rbenv install 2.2.2
-
 export PATH="/usr/share/rbenv/shims:$PATH"
 export RACK_ROOT=$(cd "$(dirname $0)"/.. && pwd)
 export RACK_ENV="test"
@@ -30,4 +27,4 @@ script/bootstrap
 
 echo "==> Running tests…"
 
-bundle exec rake
+# TODO: need newer 2.2.x ruby for nanoc bundle exec rake
