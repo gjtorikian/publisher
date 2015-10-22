@@ -38,6 +38,7 @@ class Cloner
         add_remote
         fetch
         checkout
+        install
         build_docs
         logger.info 'Published!'
       end
@@ -137,7 +138,13 @@ class Cloner
     git.branch(branch_name).checkout
   end
 
+  def install
+    logger.info 'Installing gems...'
+    logger.info `bundle install`
+  end
+
   def build_docs
-     puts `bundle exec rake publish[true]`
+    logger.info "Publishin'..."
+    logger.info `bundle exec rake publish[true]`
   end
 end
