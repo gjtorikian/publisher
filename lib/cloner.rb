@@ -129,6 +129,10 @@ class Cloner
     git.remote(remote_name).fetch
   end
 
+  def branch_name
+    'master'
+  end
+
   def checkout
     logger.info "Checking out #{branch_name}"
     git.branch(branch_name).checkout
