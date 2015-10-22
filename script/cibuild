@@ -24,7 +24,7 @@ export RUBYOPT=
 # bootstrap gem environment changes
 cd "$RACK_ROOT"
 echo 'Bootstrapping gems...'
-script/bootstrap
+# script/bootstrap
 
 echo "==> Running tests…"
 
