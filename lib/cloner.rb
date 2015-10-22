@@ -6,7 +6,6 @@ class Cloner
   DEFAULTS = {
     :tmpdir               => nil,
     :sha                  => nil,
-    :sync_method          => 'merge',
     :originating_hostname => GITHUB_DOMAIN,
     :originating_repo     => nil,
     :git                  => nil

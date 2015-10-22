@@ -11,7 +11,7 @@ module Helpers
   def process_payload(payload)
     @originating_repo = "#{payload['repository']['owner']['name']}/#{payload['repository']['name']}"
     @originating_hostname = payload['repository']['url'].match(%r{//(.+?)/})[1]
-    @after_sha = payload['after']
+    @sha = payload['after']
   end
 
   def master_branch?(payload)
