@@ -3,4 +3,5 @@
 set -e
 export CC=gcc
 
-foreman start
+redis-server script/redis.conf
+rerun foreman start

@@ -1,3 +1,8 @@
+begin
+  require 'dotenv'
+rescue LoadError
+end
+
 require "sinatra/base"
 require "json"
 require "fileutils"
