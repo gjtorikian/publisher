@@ -14,7 +14,8 @@ export PATH="/usr/share/rbenv/shims:$PATH"
 export RACK_ROOT=$(cd "$(dirname $0)"/.. && pwd)
 export RACK_ENV="test"
 export RAILS_ENV="test"
-export RBENV_VERSION="2.2.2"
+# TODO: need newer 2.2.x ruby for nanoc
+# export RBENV_VERSION="2.2.2"
 
 # clean out the ruby environment
 export RUBYLIB=
@@ -27,4 +28,5 @@ script/bootstrap
 
 echo "==> Running tests…"
 
-# TODO: need newer 2.2.x ruby for nanoc bundle exec rake
+# TODO: need newer 2.2.x ruby for nanoc
+# bundle exec rake
