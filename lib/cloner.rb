@@ -140,14 +140,8 @@ class Cloner
 
   def install
     begin
-      if File.exist?('Gemfile')
-        logger.info 'Installing gems...'
-        logger.info `bundle install`
-      end
-      if File.exist?('package.json')
-        logger.info 'Installing modules...'
-        logger.info `npm install`
-      end
+      logger.info 'Installing dependencies...'
+      logger.info `script/bootstrap`
     rescue StandardError => error
       logger.error "Couldn\'t install dependencies! #{error}"
     end
