@@ -17,7 +17,7 @@ class Cloner
     logger.level = Logger::WARN if ENV['RACK_ENV'] == 'test'
     logger.info 'New Cloner instance initialized'
 
-    DEFAULTS.each { |key,value| instance_variable_set("@#{key}", options[key] || value) }
+    DEFAULTS.each { |key, value| instance_variable_set("@#{key}", options[key] || value) }
     @tmpdir ||= Dir.mktmpdir('publisher')
 
     if originating_hostname != GITHUB_DOMAIN
@@ -84,7 +84,7 @@ class Cloner
   def git
     @git ||= begin
       logger.info "Cloning #{originating_repo} from #{originating_hostname}..."
-      Git.clone(url_with_token, "#{tmpdir}/#{originating_repo}")
+      logger.info `git clone #{url_with_token} #{tmpdir}/#{originating_repo} --depth 1`
     end
   end
 
@@ -140,12 +140,10 @@ class Cloner
 
   def install
     begin
-    logger.info 'Installing gems...'
-      logger.info `bundle install`
-      logger.info 'Installing modules...'
-      logger.info `npm install`
-    rescue Exception => error
-      logger.error "Couldn\'t install dependencies! #{e}"
+      logger.info 'Installing dependencies...'
+      logger.info `script/bootstrap`
+    rescue StandardError => error
+      logger.error "Couldn\'t install dependencies! #{error}"
     end
   end
 
