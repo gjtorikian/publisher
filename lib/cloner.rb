@@ -17,7 +17,7 @@ class Cloner
     logger.level = Logger::WARN if ENV['RACK_ENV'] == 'test'
     logger.info 'New Cloner instance initialized'
 
-    DEFAULTS.each { |key,value| instance_variable_set("@#{key}", options[key] || value) }
+    DEFAULTS.each { |key, value| instance_variable_set("@#{key}", options[key] || value) }
     @tmpdir ||= Dir.mktmpdir('publisher')
 
     if originating_hostname != GITHUB_DOMAIN
@@ -140,12 +140,16 @@ class Cloner
 
   def install
     begin
-    logger.info 'Installing gems...'
-      logger.info `bundle install`
-      logger.info 'Installing modules...'
-      logger.info `npm install`
-    rescue Exception => error
-      logger.error "Couldn\'t install dependencies! #{e}"
+      if File.exist?('Gemfile')
+        logger.info 'Installing gems...'
+        logger.info `bundle install`
+      end
+      if File.exist?('package.json')
+        logger.info 'Installing modules...'
+        logger.info `npm install`
+      end
+    rescue StandardError => error
+      logger.error "Couldn\'t install dependencies! #{error}"
     end
   end
 
