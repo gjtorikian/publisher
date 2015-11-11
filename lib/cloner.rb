@@ -84,8 +84,7 @@ class Cloner
   def git
     @git ||= begin
       logger.info "Cloning #{originating_repo} from #{originating_hostname}..."
-      logger.info `git clone #{url_with_token} #{tmpdir}/#{originating_repo} --depth 1`
-      Git.open "#{tmpdir}/#{originating_repo}"
+      Git.clone(url_with_token, "#{tmpdir}/#{originating_repo}")
     end
   end
 
