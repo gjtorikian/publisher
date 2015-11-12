@@ -4,7 +4,6 @@
     "gulp": "^3.9.0",
     "js-yaml": "^3.4.3"
   },
-  "license": "MIT",
   "repository": {
     "type" : "git",
     "url" : "https://github.com/github/publisher.git"
