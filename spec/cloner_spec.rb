@@ -68,16 +68,4 @@ describe 'Cloner' do
     cloner.report_error(output)
     expect(stub).to have_been_requested
   end
-
-  it "adds the remote" do
-    expect(cloner.git.remotes.count).to eql(1)
-    cloner.add_remote
-    expect(cloner.git.remotes.count).to eql(2)
-  end
-
-  it "fetches the repo" do
-    cloner.instance_variable_set("@url_with_token", fixture_path("/gjtorikian/originating_repo"))
-    cloner.add_remote
-    cloner.fetch
-  end
 end

@@ -35,9 +35,6 @@ class Cloner
   def clone
     Bundler.with_clean_env do
       Dir.chdir "#{tmpdir}/#{originating_repo}" do
-        add_remote
-        fetch
-        checkout
         copy
         install
         build_docs
@@ -119,25 +116,6 @@ class Cloner
   def git_init
     git.config('user.name',  ENV['MACHINE_USER_NAME'])
     git.config('user.email', ENV['MACHINE_USER_EMAIL'])
-  end
-
-  def add_remote
-    logger.info "Adding remote for #{originating_repo} on #{originating_hostname}..."
-    git.add_remote(remote_name, url_with_token)
-  end
-
-  def fetch
-    logger.info "Fetching #{originating_repo}..."
-    git.remote(remote_name).fetch
-  end
-
-  def branch_name
-    'master'
-  end
-
-  def checkout
-    logger.info "Checking out #{branch_name}"
-    git.branch(branch_name).checkout
   end
 
   # mostly for incredibly slow native gems like nokogiri
