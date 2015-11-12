@@ -6,6 +6,7 @@ gem 'unicorn', '~> 4.8'
 gem 'json', '~> 1.8'
 gem 'rake'
 gem 'git', '~> 1.2'
+gem 'nokogiri', '~> 1.6'
 gem 'octokit', '~> 2.0'
 gem 'resque', '~> 1.25'
 
