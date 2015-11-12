@@ -1,14 +1,14 @@
 source 'https://rubygems.org'
 ruby '2.2.3'
 
-gem 'sinatra', '1.4'
-gem 'unicorn', '~> 4.8'
 gem 'json', '~> 1.8'
-gem 'rake'
 gem 'git', '~> 1.2'
 gem 'nokogiri', '~> 1.6'
 gem 'octokit', '~> 2.0'
+gem 'rake'
 gem 'resque', '~> 1.25'
+gem 'sinatra', '1.4'
+gem 'unicorn', '~> 4.8'
 
 group :development do
   gem 'foreman', '~> 0.71'
