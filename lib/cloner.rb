@@ -84,7 +84,8 @@ class Cloner
   def git
     @git ||= begin
       logger.info "Cloning #{originating_repo} from #{originating_hostname}..."
-      Git.clone(url_with_token, "#{tmpdir}/#{originating_repo}")
+      logger.info `git clone #{url_with_token} #{tmpdir}/#{originating_repo} --depth 1`
+      Git.open "#{tmpdir}/#{originating_repo}"
     end
   end
 
@@ -148,7 +149,13 @@ class Cloner
   end
 
   def build_docs
+    fetch_pages
     logger.info "Publishin'..."
     logger.info `bundle exec rake publish[true]`
+  end
+
+  # necessary because of the shallow clone
+  def fetch_pages
+    logger.info `git fetch origin gh-pages:gh-pages --depth 1`
   end
 end
