@@ -2,6 +2,7 @@
   "description": "Publisher",
   "dependencies": {
     "gulp": "^3.9.0",
+    "gulp-sass": "^2.0.4",
     "js-yaml": "^3.4.3"
   },
   "repository": {
