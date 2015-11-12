@@ -38,6 +38,7 @@ class Cloner
         add_remote
         fetch
         checkout
+        copy
         install
         build_docs
         logger.info 'Published!'
@@ -137,6 +138,19 @@ class Cloner
   def checkout
     logger.info "Checking out #{branch_name}"
     git.branch(branch_name).checkout
+  end
+
+  # mostly for incredibly slow native gems like nokogiri
+  def copy
+    begin
+      logger.info 'Copying slugged dependencies...'
+      logger.info `mkdir -p vendor/bundle`
+      logger.info `cp -r /app/vendor/bundle/* vendor/bundle/`
+      logger.info `mkdir -p node_modules`
+      logger.info `cp -r /app/node_modules/* node_modules/`
+    rescue StandardError => error
+      logger.error "Couldn\'t install dependencies! #{error}"
+    end
   end
 
   def install
