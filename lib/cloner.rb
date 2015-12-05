@@ -103,7 +103,7 @@ class Cloner
 
   def report_error(command_output)
     body = "Hey, I'm really sorry about this, but there was some kind of error "
-    body << "when I tried to publish the last time, from #{after_sha}:\n"
+    body << "when I tried to publish the last time, from #{sha}:\n"
     body << "\n```\n"
     body << command_output
     body << "\n```\n"
