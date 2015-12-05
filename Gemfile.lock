@@ -88,7 +88,7 @@ DEPENDENCIES
   git (~> 1.2)
   json (~> 1.8)
   nokogiri (~> 1.6)
-  octokit (~> 4.0)
+  octokit (~> 4.2)
   rack-test (~> 0.6)
   rake
   resque (~> 1.25)
