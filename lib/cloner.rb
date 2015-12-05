@@ -35,7 +35,6 @@ class Cloner
   def clone
     Bundler.with_clean_env do
       Dir.chdir "#{tmpdir}/#{originating_repo}" do
-        copy
         install
         build_docs
         logger.info 'Published!'
@@ -82,7 +81,8 @@ class Cloner
   def git
     @git ||= begin
       logger.info "Cloning #{originating_repo} from #{originating_hostname}..."
-      logger.info `git clone #{url_with_token} #{tmpdir}/#{originating_repo} --depth 1`
+      # intentionally not logged to not leak token
+      `git clone #{url_with_token} #{tmpdir}/#{originating_repo} --depth 1`
       Git.open "#{tmpdir}/#{originating_repo}"
     end
   end
@@ -94,60 +94,42 @@ class Cloner
     output = output.gsub(/#{dotcom_token}/, '<TOKEN>') if dotcom_token
     logger.info "Result: #{output}"
     if status != 0
-      report_error(output)
+      report_error(args.join(' '), output)
       fail "Command `#{args.join(' ')}` failed: #{output}"
     end
     output
   end
 
-  def report_error(command_output)
+  def report_error(command, command_output)
     body = "Hey, I'm really sorry about this, but there was some kind of error "
-    body << "when I tried to build from #{sha}:\n"
+    body << "when I tried to publish the last time, from #{sha}:\n"
     body << "\n```\n"
+    body << "#{command}\n"
     body << command_output
     body << "\n```\n"
     body << "You'll have to resolve this problem manually, I'm afraid.\n"
-    body << "![I'm so sorry](http://media.giphy.com/media/NxKcqJI6MdIgo/giphy.gif)"
-    client.create_issue originating_repo, '[Publisher] Error detected', body
+    body << "![I'm sorry](http://pa1.narvii.com/5910/2c8b457dd08a3ff9e09680168960288a6882991c_hq.gif)"
+    client.create_issue originating_repo, 'Error detected', body
   end
-
-  # Methods that perform sync actions, in order
 
   def git_init
     git.config('user.name',  ENV['MACHINE_USER_NAME'])
     git.config('user.email', ENV['MACHINE_USER_EMAIL'])
   end
 
-  # mostly for incredibly slow native gems like nokogiri
-  def copy
-    begin
-      logger.info 'Copying slugged dependencies...'
-      logger.info `mkdir -p vendor/bundle`
-      logger.info `cp -r /app/vendor/bundle/* vendor/bundle/`
-      logger.info `mkdir -p node_modules`
-      logger.info `cp -r /app/node_modules/* node_modules/`
-    rescue StandardError => error
-      logger.error "Couldn\'t install dependencies! #{error}"
-    end
-  end
-
   def install
-    begin
-      logger.info 'Installing dependencies...'
-      logger.info `script/bootstrap`
-    rescue StandardError => error
-      logger.error "Couldn\'t install dependencies! #{error}"
-    end
+    logger.info 'Installing dependencies...'
+    run_command 'script/bootstrap'
   end
 
   def build_docs
     fetch_pages
     logger.info "Publishin'..."
-    logger.info `bundle exec rake publish[true]`
+    run_command 'bundle', 'exec', 'rake', 'publish[true]'
   end
 
   # necessary because of the shallow clone
   def fetch_pages
-    logger.info `git fetch origin gh-pages:gh-pages --depth 1`
+    run_command 'git', 'fetch', 'origin', 'gh-pages:gh-pages', '--depth', '1'
   end
 end
