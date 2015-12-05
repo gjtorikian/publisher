@@ -94,16 +94,17 @@ class Cloner
     output = output.gsub(/#{dotcom_token}/, '<TOKEN>') if dotcom_token
     logger.info "Result: #{output}"
     if status != 0
-      report_error(output)
+      report_error(args.join(' '), output)
       fail "Command `#{args.join(' ')}` failed: #{output}"
     end
     output
   end
 
-  def report_error(command_output)
+  def report_error(command, command_output)
     body = "Hey, I'm really sorry about this, but there was some kind of error "
     body << "when I tried to publish the last time, from #{sha}:\n"
     body << "\n```\n"
+    body << "#{command}\n"
     body << command_output
     body << "\n```\n"
     body << "You'll have to resolve this problem manually, I'm afraid.\n"
