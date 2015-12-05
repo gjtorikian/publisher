@@ -130,6 +130,6 @@ class Cloner
 
   # necessary because of the shallow clone
   def fetch_pages
-    run_command 'git', 'fetch', 'origin', 'gh-pages:gh-pages', '--depth 1'
+    run_command 'git', 'fetch', 'origin', 'gh-pages:gh-pages', '--depth', '1'
   end
 end
