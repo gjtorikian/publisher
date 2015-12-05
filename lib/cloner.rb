@@ -102,16 +102,14 @@ class Cloner
 
   def report_error(command_output)
     body = "Hey, I'm really sorry about this, but there was some kind of error "
-    body << "when I tried to build from #{sha}:\n"
+    body << "when I tried to publish the last time, from #{after_sha}:\n"
     body << "\n```\n"
     body << command_output
     body << "\n```\n"
     body << "You'll have to resolve this problem manually, I'm afraid.\n"
-    body << "![I'm so sorry](http://media.giphy.com/media/NxKcqJI6MdIgo/giphy.gif)"
-    client.create_issue originating_repo, '[Publisher] Error detected', body
+    body << "![I'm sorry](http://pa1.narvii.com/5910/2c8b457dd08a3ff9e09680168960288a6882991c_hq.gif)"
+    client.create_issue originating_repo, 'Error detected', body
   end
-
-  # Methods that perform sync actions, in order
 
   def git_init
     git.config('user.name',  ENV['MACHINE_USER_NAME'])
