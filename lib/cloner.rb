@@ -124,17 +124,11 @@ class Cloner
     run_command 'cp', '-r', '/app/vendor/bundle/*', 'vendor/bundle/'
     run_command 'mkdir', '-p', 'node_modules'
     run_command 'cp', '-r', '/app/node_modules/* node_modules/'
-    rescue StandardError => error
-      logger.error "Couldn\'t install dependencies! #{error}"
-    end
   end
 
   def install
     logger.info 'Installing dependencies...'
     run_command 'script/bootstrap'
-    rescue StandardError => error
-      logger.error "Couldn\'t install dependencies! #{error}"
-    end
   end
 
   def build_docs
