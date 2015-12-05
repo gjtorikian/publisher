@@ -82,7 +82,8 @@ class Cloner
   def git
     @git ||= begin
       logger.info "Cloning #{originating_repo} from #{originating_hostname}..."
-      logger.info `git clone #{url_with_token} #{tmpdir}/#{originating_repo} --depth 1`
+      # intentionally not logged to not leak token
+      `git clone #{url_with_token} #{tmpdir}/#{originating_repo} --depth 1`
       Git.open "#{tmpdir}/#{originating_repo}"
     end
   end
@@ -118,21 +119,19 @@ class Cloner
 
   # mostly for incredibly slow native gems like nokogiri
   def copy
-    begin
-      logger.info 'Copying slugged dependencies...'
-      logger.info `mkdir -p vendor/bundle`
-      logger.info `cp -r /app/vendor/bundle/* vendor/bundle/`
-      logger.info `mkdir -p node_modules`
-      logger.info `cp -r /app/node_modules/* node_modules/`
+    logger.info 'Copying slugged dependencies...'
+    run_command 'mkdir', '-p', 'vendor/bundle'
+    run_command 'cp', '-r', '/app/vendor/bundle/*', 'vendor/bundle/'
+    run_command 'mkdir', '-p', 'node_modules'
+    run_command 'cp', '-r', '/app/node_modules/* node_modules/'
     rescue StandardError => error
       logger.error "Couldn\'t install dependencies! #{error}"
     end
   end
 
   def install
-    begin
-      logger.info 'Installing dependencies...'
-      logger.info `script/bootstrap`
+    logger.info 'Installing dependencies...'
+    run_command 'script/bootstrap'
     rescue StandardError => error
       logger.error "Couldn\'t install dependencies! #{error}"
     end
@@ -141,11 +140,11 @@ class Cloner
   def build_docs
     fetch_pages
     logger.info "Publishin'..."
-    logger.info `bundle exec rake publish[true]`
+    run_command 'bundle', 'exec', 'rake', 'publish[true]'
   end
 
   # necessary because of the shallow clone
   def fetch_pages
-    logger.info `git fetch origin gh-pages:gh-pages --depth 1`
+    run_command 'git', 'fetch', 'origin', 'gh-pages:gh-pages', '--depth 1'
   end
 end
