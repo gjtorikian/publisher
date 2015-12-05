@@ -35,7 +35,6 @@ class Cloner
   def clone
     Bundler.with_clean_env do
       Dir.chdir "#{tmpdir}/#{originating_repo}" do
-        copy
         install
         build_docs
         logger.info 'Published!'
@@ -115,15 +114,6 @@ class Cloner
   def git_init
     git.config('user.name',  ENV['MACHINE_USER_NAME'])
     git.config('user.email', ENV['MACHINE_USER_EMAIL'])
-  end
-
-  # mostly for incredibly slow native gems like nokogiri
-  def copy
-    logger.info 'Copying slugged dependencies...'
-    run_command 'mkdir', '-p', 'vendor/bundle'
-    run_command 'cp', '-r', '/app/vendor/bundle/*', 'vendor/bundle/'
-    run_command 'mkdir', '-p', 'node_modules'
-    run_command 'cp', '-r', '/app/node_modules/* node_modules/'
   end
 
   def install
