@@ -125,7 +125,7 @@ class Cloner
   def build_docs
     fetch_pages
     logger.info "Publishin'..."
-    run_command 'bundle', 'exec', 'rake', 'publish[true]'
+    run_command "BUILD_SHA=#{sha}", 'bundle', 'exec', 'rake', 'publish[true]'
   end
 
   # necessary because of the shallow clone
