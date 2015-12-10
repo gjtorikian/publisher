@@ -89,7 +89,7 @@ class Cloner
 
   def run_command(*args)
     logger.info "Running command #{args.join(' ')}"
-    output, status = Open3.capture2e(*args)
+    output, status = Open3.capture2e({'BUILD_SHA' => sha}, *args)
     output = output.gsub(/#{dotcom_token}/, '<TOKEN>') if dotcom_token
     logger.info "Result: #{output}"
     if status != 0
@@ -124,7 +124,7 @@ class Cloner
   def build_docs
     fetch_pages
     logger.info "Publishin'..."
-    run_command "BUILD_SHA=#{sha} bundle", 'exec', 'rake', 'publish[true]'
+    run_command 'bundle', 'exec', 'rake', 'publish[true]'
   end
 
   # necessary because of the shallow clone
