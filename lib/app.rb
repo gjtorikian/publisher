@@ -44,7 +44,7 @@ class Publisher < Sinatra::Base
     # keep some important vars
     process_payload(@payload)
 
-    Resque.enqueue(BuildJob, @sha, @originating_hostname, @originating_repo)
+    Resque.enqueue(BuildJob, @committer, @sha, @originating_hostname, @originating_repo)
   end
 
   helpers Helpers

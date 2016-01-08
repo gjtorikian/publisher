@@ -12,6 +12,10 @@ module Helpers
     @originating_repo = "#{payload['repository']['owner']['name']}/#{payload['repository']['name']}"
     @originating_hostname = payload['repository']['url'].match(%r{//(.+?)/})[1]
     @sha = payload['after']
+    users = commits.map do |commit|
+      username = commit['author']['username'] || commit['committer']['username']
+    end
+    @committers = users.uniq.map { |user| "@#{user}" }
   end
 
   def master_branch?(payload)

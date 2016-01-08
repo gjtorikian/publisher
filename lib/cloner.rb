@@ -5,13 +5,14 @@ class Cloner
 
   DEFAULTS = {
     :tmpdir               => nil,
+    :committers           => nil,
     :sha                  => nil,
     :originating_hostname => GITHUB_DOMAIN,
     :originating_repo     => nil,
     :git                  => nil
   }
 
-  attr_accessor :tmpdir, :sha, :originating_hostname, :originating_repo
+  attr_accessor :tmpdir, :committers, :sha, :originating_hostname, :originating_repo
 
   def initialize(options)
     logger.level = Logger::WARN if ENV['RACK_ENV'] == 'test'
@@ -108,6 +109,7 @@ class Cloner
     body << "\n```\n"
     body << "You'll have to resolve this problem manually, I'm afraid.\n"
     body << "![I'm sorry](http://pa1.narvii.com/5910/2c8b457dd08a3ff9e09680168960288a6882991c_hq.gif)"
+    body << "\n\n /cc #{committers.join(' ')}" unless committers.nil?
     client.create_issue originating_repo, 'Error detected', body
   end
 
