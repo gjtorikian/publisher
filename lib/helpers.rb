@@ -12,6 +12,7 @@ module Helpers
     @originating_repo = "#{payload['repository']['owner']['name']}/#{payload['repository']['name']}"
     @originating_hostname = payload['repository']['url'].match(%r{//(.+?)/})[1]
     @sha = payload['after']
+    commits = payload['commits']
     users = commits.map do |commit|
       username = commit['author']['username'] || commit['committer']['username']
     end
