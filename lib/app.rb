@@ -22,7 +22,7 @@ class Publisher < Sinatra::Base
   end
 
   get '/' do
-    'I think you misunderstand how to use this.'
+    'See https://github.com/gjtorikian/publisher for documentation'
   end
 
   post '/build' do
