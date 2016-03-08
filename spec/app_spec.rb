@@ -7,7 +7,7 @@ describe 'Main app' do
 
   it 'serves the index' do
     get '/'
-    expect(last_response.body).to eql('I think you misunderstand how to use this.')
+    expect(last_response.body).to eql('See https://github.com/gjtorikian/publisher for documentation')
   end
 
   it 'serves nothing for any other page' do
