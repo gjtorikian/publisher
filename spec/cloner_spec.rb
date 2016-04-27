@@ -63,9 +63,10 @@ describe 'Cloner' do
          with(:body => "{\"labels\":null,\"title\":\"[Publisher] Error detected\",\"body\":\"Hey, I'm really sorry about this, but there was some kind of error when I tried to build from :\\n\\n```\\nfoo\\nMerge error\\nbar\\n```\\nYou'll have to resolve this problem manually, I'm afraid.\\n![I'm so sorry](http://media.giphy.com/media/NxKcqJI6MdIgo/giphy.gif)\"}").
          to_return(:status => 204, :body => "", :headers => {})
 
+    command = 'echo foo bar'
     output = "foo\nMerge error\nbar"
 
-    cloner.report_error(output)
+    cloner.report_error(command, output)
     expect(stub).to have_been_requested
   end
 end
