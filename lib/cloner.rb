@@ -5,7 +5,7 @@ class Cloner
 
   DEFAULTS = {
     :tmpdir               => nil,
-    :committers           => nil,
+    :committers           => [],
     :sha                  => nil,
     :originating_hostname => GITHUB_DOMAIN,
     :originating_repo     => nil,
@@ -116,7 +116,7 @@ You'll have to resolve this problem manually, I'm afraid.
     MARKDOWN
 
 
-    if committers
+    if committers.any?
       body << <<-MARKDOWN
 
 /cc #{committers.join(' ')}
