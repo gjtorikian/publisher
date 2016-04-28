@@ -110,7 +110,8 @@ class Cloner
     body << "You'll have to resolve this problem manually, I'm afraid.\n"
     body << "![I'm sorry](http://pa1.narvii.com/5910/2c8b457dd08a3ff9e09680168960288a6882991c_hq.gif)"
     body << "\n\n /cc #{committers.join(' ')}" unless committers.nil?
-    client.create_issue originating_repo, 'Error detected', body
+
+    client.create_issue originating_repo, "Publisher failed to publish #{sha[0..6]}", body
   end
 
   def git_init
