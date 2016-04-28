@@ -70,4 +70,47 @@ describe 'Cloner' do
     cloner.report_error(command, output)
     expect(stub).to have_been_requested
   end
+
+  it "reports errors with committers cc'd" do
+    cloner.committers = ['@nuclearsandwich', '@gjtorikian']
+    stub = stub_request(:post, "https://api.github.com/repos/gjtorikian/originating_repo/issues").
+         with(:body => "{\"labels\":[],\"title\":\"Error detected\",\"body\":\"Hey, I'm really sorry about this, but there was some kind of error when I tried to publish the last time, from :\\n\\n```\\necho foo bar\\nfoo\\nMerge error\\nbar\\n```\\n\\nYou'll have to resolve this problem manually, I'm afraid.\\n\\n![I'm sorry](http://pa1.narvii.com/5910/2c8b457dd08a3ff9e09680168960288a6882991c_hq.gif)\\n\\n/cc @nuclearsandwich @gjtorikian \\n\"}",
+              :headers => {'Accept'=>'application/vnd.github.v3+json', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/json', 'User-Agent'=>'Octokit Ruby Gem 4.2.0'}).
+         to_return(:status => 204, :body => "", :headers => {})
+
+    command = 'echo foo bar'
+    output = "foo\nMerge error\nbar"
+
+    cloner.report_error(command, output)
+    expect(stub).to have_been_requested
+  end
+
+  it "cc's teams that want to know about errors" do
+    cloner.cc_on_error = ['@github/support-tools']
+    stub = stub_request(:post, "https://api.github.com/repos/gjtorikian/originating_repo/issues").
+         with(:body => "{\"labels\":[],\"title\":\"Error detected\",\"body\":\"Hey, I'm really sorry about this, but there was some kind of error when I tried to publish the last time, from :\\n\\n```\\necho foo bar\\nfoo\\nMerge error\\nbar\\n```\\n\\nYou'll have to resolve this problem manually, I'm afraid.\\n\\n![I'm sorry](http://pa1.narvii.com/5910/2c8b457dd08a3ff9e09680168960288a6882991c_hq.gif)\\n\\n/cc  @github/support-tools\\n\"}",
+              :headers => {'Accept'=>'application/vnd.github.v3+json', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/json', 'User-Agent'=>'Octokit Ruby Gem 4.2.0'}).
+         to_return(:status => 204, :body => "", :headers => {})
+
+    command = 'echo foo bar'
+    output = "foo\nMerge error\nbar"
+
+    cloner.report_error(command, output)
+    expect(stub).to have_been_requested
+  end
+
+  it "cc's teams and committers together" do
+    cloner.committers = ['@nuclearsandwich', '@gjtorikian']
+    cloner.cc_on_error = ['@github/support-tools', '@nuclearsandwich']
+    stub = stub_request(:post, "https://api.github.com/repos/gjtorikian/originating_repo/issues").
+         with(:body => "{\"labels\":[],\"title\":\"Error detected\",\"body\":\"Hey, I'm really sorry about this, but there was some kind of error when I tried to publish the last time, from :\\n\\n```\\necho foo bar\\nfoo\\nMerge error\\nbar\\n```\\n\\nYou'll have to resolve this problem manually, I'm afraid.\\n\\n![I'm sorry](http://pa1.narvii.com/5910/2c8b457dd08a3ff9e09680168960288a6882991c_hq.gif)\\n\\n/cc @nuclearsandwich @gjtorikian @github/support-tools @nuclearsandwich\\n\"}",
+              :headers => {'Accept'=>'application/vnd.github.v3+json', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/json', 'User-Agent'=>'Octokit Ruby Gem 4.2.0'}).
+         to_return(:status => 204, :body => "", :headers => {})
+
+    command = 'echo foo bar'
+    output = "foo\nMerge error\nbar"
+
+    cloner.report_error(command, output)
+    expect(stub).to have_been_requested
+  end
 end
