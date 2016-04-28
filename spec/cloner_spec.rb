@@ -60,12 +60,14 @@ describe 'Cloner' do
 
   it "reports errors" do
     stub = stub_request(:post, "https://api.github.com/repos/gjtorikian/originating_repo/issues").
-         with(:body => "{\"labels\":null,\"title\":\"[Publisher] Error detected\",\"body\":\"Hey, I'm really sorry about this, but there was some kind of error when I tried to build from :\\n\\n```\\nfoo\\nMerge error\\nbar\\n```\\nYou'll have to resolve this problem manually, I'm afraid.\\n![I'm so sorry](http://media.giphy.com/media/NxKcqJI6MdIgo/giphy.gif)\"}").
+         with(:body => "{\"labels\":[],\"title\":\"Error detected\",\"body\":\"Hey, I'm really sorry about this, but there was some kind of error when I tried to publish the last time, from :\\n\\n```\\necho foo bar\\nfoo\\nMerge error\\nbar\\n```\\nYou'll have to resolve this problem manually, I'm afraid.\\n![I'm sorry](http://pa1.narvii.com/5910/2c8b457dd08a3ff9e09680168960288a6882991c_hq.gif)\"}",
+              :headers => {'Accept'=>'application/vnd.github.v3+json', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/json', 'User-Agent'=>'Octokit Ruby Gem 4.2.0'}).
          to_return(:status => 204, :body => "", :headers => {})
 
+    command = 'echo foo bar'
     output = "foo\nMerge error\nbar"
 
-    cloner.report_error(output)
+    cloner.report_error(command, output)
     expect(stub).to have_been_requested
   end
 end
