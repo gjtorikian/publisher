@@ -43,8 +43,10 @@ class Publisher < Sinatra::Base
 
     # keep some important vars
     process_payload(@payload)
+    # query parameter specifying additional users or teams to ping in the error issue.
+    @cc_on_error = params[:cc_on_error].split(",").map{|user_or_team| "@" + user_or_team} if params[:cc_on_error]
 
-    Resque.enqueue(BuildJob, @committer, @sha, @originating_hostname, @originating_repo)
+    Resque.enqueue(BuildJob, @committer, @sha, @originating_hostname, @originating_repo, @cc_on_error)
   end
 
   helpers Helpers

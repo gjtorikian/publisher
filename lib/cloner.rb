@@ -9,10 +9,11 @@ class Cloner
     :sha                  => nil,
     :originating_hostname => GITHUB_DOMAIN,
     :originating_repo     => nil,
+    :cc_on_error          => [],
     :git                  => nil
   }
 
-  attr_accessor :tmpdir, :committers, :sha, :originating_hostname, :originating_repo
+  attr_accessor :tmpdir, :committers, :sha, :originating_hostname, :originating_repo, :cc_on_error
 
   def initialize(options)
     logger.level = Logger::WARN if ENV['RACK_ENV'] == 'test'
@@ -112,14 +113,13 @@ Hey, I'm really sorry about this, but there was some kind of error when I tried 
 You'll have to resolve this problem manually, I'm afraid.
 
 ![I'm sorry](http://pa1.narvii.com/5910/2c8b457dd08a3ff9e09680168960288a6882991c_hq.gif)
-
     MARKDOWN
 
 
-    if committers.any?
+    if committers.any? or cc_on_error.any?
       body << <<-MARKDOWN
 
-/cc #{committers.join(' ')}
+/cc #{committers.join(' ')} #{cc_on_error.join(' ')}
       MARKDOWN
     end
 
