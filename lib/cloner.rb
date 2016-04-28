@@ -123,7 +123,7 @@ You'll have to resolve this problem manually, I'm afraid.
       MARKDOWN
     end
 
-    client.create_issue originating_repo, 'Error detected', body
+    client.create_issue originating_repo, "Publisher failed to publish #{sha[0..6]}", body
   end
 
   def git_init
