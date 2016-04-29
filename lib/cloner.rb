@@ -5,14 +5,15 @@ class Cloner
 
   DEFAULTS = {
     :tmpdir               => nil,
-    :committers           => nil,
+    :committers           => [],
     :sha                  => nil,
     :originating_hostname => GITHUB_DOMAIN,
     :originating_repo     => nil,
+    :cc_on_error          => [],
     :git                  => nil
   }
 
-  attr_accessor :tmpdir, :committers, :sha, :originating_hostname, :originating_repo
+  attr_accessor :tmpdir, :committers, :sha, :originating_hostname, :originating_repo, :cc_on_error
 
   def initialize(options)
     logger.level = Logger::WARN if ENV['RACK_ENV'] == 'test'
@@ -101,15 +102,26 @@ class Cloner
   end
 
   def report_error(command, command_output)
-    body = "Hey, I'm really sorry about this, but there was some kind of error "
-    body << "when I tried to publish the last time, from #{sha}:\n"
-    body << "\n```\n"
-    body << "#{command}\n"
-    body << command_output
-    body << "\n```\n"
-    body << "You'll have to resolve this problem manually, I'm afraid.\n"
-    body << "![I'm sorry](http://pa1.narvii.com/5910/2c8b457dd08a3ff9e09680168960288a6882991c_hq.gif)"
-    body << "\n\n /cc #{committers.join(' ')}" unless committers.nil?
+    body = <<-MARKDOWN
+Hey, I'm really sorry about this, but there was some kind of error when I tried to publish the last time, from #{sha}:
+
+```
+#{command}
+#{command_output}
+```
+
+You'll have to resolve this problem manually, I'm afraid.
+
+![I'm sorry](http://pa1.narvii.com/5910/2c8b457dd08a3ff9e09680168960288a6882991c_hq.gif)
+    MARKDOWN
+
+
+    if committers.any? or cc_on_error.any?
+      body << <<-MARKDOWN
+
+/cc #{committers.join(' ')} #{cc_on_error.join(' ')}
+      MARKDOWN
+    end
 
     client.create_issue originating_repo, "Publisher failed to publish #{sha[0..6]}", body
   end
