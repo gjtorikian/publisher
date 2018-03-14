@@ -1,13 +1,13 @@
 source 'https://rubygems.org'
-ruby '2.2.3'
+ruby '2.4.0'
 
 gem 'json', '~> 1.8'
 gem 'git', '~> 1.2'
-gem 'nokogiri', '~> 1.6'
+gem 'nokogiri', '~> 1.8'
 gem 'octokit', '~> 4.2'
 gem 'rake'
 gem 'resque', '~> 1.25'
-gem 'sinatra', '1.4'
+gem 'sinatra', '~> 1.4'
 gem 'unicorn', '~> 4.8'
 
 group :development do
