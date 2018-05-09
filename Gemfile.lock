@@ -89,7 +89,7 @@ DEPENDENCIES
   foreman (~> 0.71)
   git (~> 1.2)
   json (~> 1.8)
-  nokogiri (~> 1.8)
+  nokogiri (~> 1.6)
   octokit (~> 4.2)
   rack-test (~> 0.6)
   rake
@@ -101,7 +101,7 @@ DEPENDENCIES
   webmock (~> 1.2)
 
 RUBY VERSION
-   ruby 2.4.0p0
+   ruby 2.2.3p173
 
 BUNDLED WITH
-   1.14.3
+   1.15.4
