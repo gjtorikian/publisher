@@ -4,6 +4,7 @@ class Cloner
   GITHUB_DOMAIN = 'github.com'
 
   DEFAULTS = {
+    :app_client           => nil,
     :tmpdir               => nil,
     :committers           => [],
     :sha                  => nil,
@@ -13,7 +14,7 @@ class Cloner
     :git                  => nil
   }
 
-  attr_accessor :tmpdir, :committers, :sha, :originating_hostname, :originating_repo, :cc_on_error
+  attr_accessor :app_client, :tmpdir, :committers, :sha, :originating_hostname, :originating_repo, :cc_on_error
 
   def initialize(options)
     logger.level = Logger::WARN if ENV['RACK_ENV'] == 'test'
@@ -50,16 +51,8 @@ class Cloner
     logger.info "Cleaning up #{tmpdir}"
   end
 
-  def originating_token
-    @originating_token ||= (originating_hostname == GITHUB_DOMAIN ? dotcom_token : ghe_token)
-  end
-
-  def dotcom_token
-    ENV['DOTCOM_MACHINE_USER_TOKEN']
-  end
-
-  def ghe_token
-    ENV['GHE_MACHINE_USER_TOKEN']
+  def app_client_token
+    @app_client_token ||= @app_client.access_token
   end
 
   def remote_name
@@ -67,7 +60,7 @@ class Cloner
   end
 
   def url_with_token
-    @url_with_token ||= "https://#{originating_token}:x-oauth-basic@#{originating_hostname}/#{originating_repo}.git"
+    @url_with_token ||= "https://#{app_client_token}:x-oauth-basic@#{originating_hostname}/#{originating_repo}.git"
   end
 
   # Plumbing methods
@@ -77,7 +70,7 @@ class Cloner
   end
 
   def client
-    @client ||= Octokit::Client.new(:access_token => originating_token)
+    @client ||= Octokit::Client.new(access_token: app_client_token)
   end
 
   def git
@@ -92,7 +85,7 @@ class Cloner
   def run_command(*args)
     logger.info "Running command #{args.join(' ')}"
     output, status = Open3.capture2e({'BUILD_SHA' => sha}, *args)
-    output = output.gsub(/#{dotcom_token}/, '<TOKEN>') if dotcom_token
+    output = output.gsub(/#{app_client_token}/, '<TOKEN>')
     logger.info "Result: #{output}"
     if status != 0
       report_error(args.join(' '), output)
@@ -102,24 +95,24 @@ class Cloner
   end
 
   def report_error(command, command_output)
-    body = <<-MARKDOWN
-Hey, I'm really sorry about this, but there was some kind of error when I tried to publish the last time, from #{sha}:
+    body = <<~MARKDOWN
+    Hey, I'm really sorry about this, but there was some kind of error when I tried to publish the last time, from #{sha}:
 
-```
-#{command}
-#{command_output}
-```
+    ```
+    #{command}
+    #{command_output}
+    ```
 
-You'll have to resolve this problem manually, I'm afraid.
+    You'll have to resolve this problem manually, I'm afraid.
 
-![I'm sorry](http://pa1.narvii.com/5910/2c8b457dd08a3ff9e09680168960288a6882991c_hq.gif)
+    ![I'm sorry](http://pa1.narvii.com/5910/2c8b457dd08a3ff9e09680168960288a6882991c_hq.gif)
     MARKDOWN
 
 
     if committers.any? or cc_on_error.any?
-      body << <<-MARKDOWN
+      body << <<~MARKDOWN
 
-/cc #{committers.join(' ')} #{cc_on_error.join(' ')}
+      /cc #{committers.join(' ')} #{cc_on_error.join(' ')}
       MARKDOWN
     end
 

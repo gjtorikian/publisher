@@ -17,14 +17,13 @@ describe 'Main app' do
 
   describe 'signature verification' do
     it 'does not work if tokens do not match' do
-      with_env('SECRET_TOKEN', 'notarealtoken') do
-        expect(helpers.signatures_match?(incoming, valid_sig)).to eql(false)
-      end
+      ENV['SECRET_TOKEN']='notarealtoken'
+      expect(helpers.signatures_match?(incoming, valid_sig)).to eql(false)
     end
+
     it 'does work if tokens match' do
-      with_env('SECRET_TOKEN', 'sosecret') do
-        expect(helpers.signatures_match?(incoming, valid_sig)).to eql(true)
-      end
+      ENV['SECRET_TOKEN']='sosecret'
+      expect(helpers.signatures_match?(incoming, valid_sig)).to eql(true)
     end
   end
 

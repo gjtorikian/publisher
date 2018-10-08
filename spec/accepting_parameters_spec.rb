@@ -26,6 +26,7 @@ describe 'endpoints' do
     end
 
     it 'can work' do
+      stub_request_for_installation_token
       post '/build', incoming
       expect(last_response.status).to eql(200)
       expect(BuildJob).to have_queue_size_of(1)

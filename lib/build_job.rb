@@ -5,8 +5,9 @@ require_relative 'cloner'
 class BuildJob
   @queue = :default
 
-  def self.perform(committers, sha, originating_hostname, originating_repo, cc_on_error)
+  def self.perform(app_client, committers, sha, originating_hostname, originating_repo, cc_on_error)
     cloner = Cloner.new({
+      :app_client            => app_client,
       :committers            => committers,
       :sha                   => sha,
       :originating_hostname  => originating_hostname,

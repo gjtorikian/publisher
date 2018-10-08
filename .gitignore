@@ -3,3 +3,5 @@
 vendor/cache/ruby
 /bin
 /tmp
+*.pem
+.byebug_history
