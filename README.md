@@ -11,7 +11,7 @@ Next, you'll need to set an environment variable:
 | Option | Description
 | :----- | :----------
 | `SECRET_TOKEN` | **Required**. This establishes a private token to secure your payloads. This token is used to [verify that the payload came from GitHub](https://developer.github.com/webhooks/securing/).
-| `REDISTOGO_URL` | **Required**.  A URL to a running redis service.
+| `REDIS_URL` | **Required**.  A URL to a running redis service.
 | `GITHUB_APP_ID` | **Required**. The ID of your GitHub App.
 | `GITHUB_APP_PEM` | **Required**. The path to your App's PEM file.
 
