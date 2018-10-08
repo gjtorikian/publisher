@@ -1,5 +1,9 @@
+# frozen_string_literal: true
+
 begin
   require 'dotenv'
+  require 'awesome_print'
+  require 'pry-byebug'
 rescue LoadError
 end
 
@@ -10,6 +14,7 @@ require 'openssl'
 require 'base64'
 
 require_relative '../config/redis'
+require_relative '../config/app_client'
 require_relative './helpers'
 require_relative './cloner'
 
@@ -43,10 +48,12 @@ class Publisher < Sinatra::Base
 
     # keep some important vars
     process_payload(@payload)
-    # query parameter specifying additional users or teams to ping in the error issue.
-    @cc_on_error = params[:cc_on_error].split(",").map{|user_or_team| "@" + user_or_team} if params[:cc_on_error]
 
-    Resque.enqueue(BuildJob, @committer, @sha, @originating_hostname, @originating_repo, @cc_on_error)
+    # query parameter specifying additional users or teams to ping in the error issue.
+    @cc_on_error = params[:cc_on_error].split(',').map { |user_or_team| "@#{user_or_team}" } if params[:cc_on_error]
+
+    @app_client = configure_app_client
+    Resque.enqueue(BuildJob, @app_client, @committer, @sha, @originating_hostname, @originating_repo, @cc_on_error)
   end
 
   helpers Helpers

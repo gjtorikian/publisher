@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'resque/tasks'
 require_relative './config/redis'
 
@@ -9,11 +11,14 @@ end
 
 if ENV['RACK_ENV'] != 'production'
   require 'rspec/core/rake_task'
-  desc 'Run specs'
-  RSpec::Core::RakeTask.new do |t|
 
-  end
-  task :default => [:spec]
+  RSpec::Core::RakeTask.new(:spec)
+
+  require 'rubocop/rake_task'
+
+  RuboCop::RakeTask.new(:rubocop)
+
+  task default: [:spec]
 end
 
 desc 'Alias for resque:work (To run workers on Heroku)'

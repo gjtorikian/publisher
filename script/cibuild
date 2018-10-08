@@ -28,5 +28,4 @@ echo 'Bootstrapping gems...'
 
 echo "==> Running tests…"
 
-# TODO: need newer 2.2.x ruby for nanoc
-# bundle exec rake
+bundle exec rake spec rubocop
