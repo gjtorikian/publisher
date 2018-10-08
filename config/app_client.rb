@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'octokit'
-require 'installation'
+require_relative '../lib/installation'
 
 def configure_app_client
   Octokit::Client.new(access_token: github_installation_token)
