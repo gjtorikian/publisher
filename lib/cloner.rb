@@ -1,17 +1,19 @@
+# frozen_string_literal: true
+
 require 'open3'
 
 class Cloner
   GITHUB_DOMAIN = 'github.com'
 
   DEFAULTS = {
-    :app_client           => nil,
-    :tmpdir               => nil,
-    :committers           => [],
-    :sha                  => nil,
-    :originating_hostname => GITHUB_DOMAIN,
-    :originating_repo     => nil,
-    :cc_on_error          => [],
-    :git                  => nil
+    app_client: nil,
+    tmpdir: nil,
+    committers: [],
+    sha: nil,
+    originating_hostname: GITHUB_DOMAIN,
+    originating_repo: nil,
+    cc_on_error: [],
+    git: nil
   }
 
   attr_accessor :app_client, :tmpdir, :committers, :sha, :originating_hostname, :originating_repo, :cc_on_error
