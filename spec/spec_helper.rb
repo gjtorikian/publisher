@@ -2,7 +2,7 @@
 
 ENV['RACK_ENV'] = 'test'
 
-ENV['GITHUB_APP_PEM'] = File.read(File.expand_path('../fixtures/snakeoil.pem.txt', __FILE__))
+ENV['PUBLISHER_GITHUB_APP_PEM'] = File.read(File.expand_path('../fixtures/snakeoil.pem.txt', __FILE__))
 ENV['INSTALLATION_ID'] = '20'
 
 require 'bundler/setup'

@@ -16,9 +16,9 @@ def github_installation
 end
 
 def integration_private_key
-  ENV['GITHUB_APP_PEM'].gsub('\n', "\n")
+  ENV['PUBLISHER_GITHUB_APP_PEM'].gsub('\n', "\n")
 end
 
 def integration_id
-  ENV['GITHUB_APP_ID']
+  ENV['PUBLISHER_GITHUB_APP_ID']
 end

@@ -6,7 +6,7 @@ require_relative './build_job'
 module Helpers
   def signatures_match?(payload_body, github_signature)
     return true if Sinatra::Base.development?
-    signature = 'sha1=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'), ENV['SECRET_TOKEN'], payload_body)
+    signature = 'sha1=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'), ENV['PUBLISHER_SECRET_TOKEN'], payload_body)
     Rack::Utils.secure_compare(signature, github_signature)
   end
 

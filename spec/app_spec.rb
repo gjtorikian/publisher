@@ -19,12 +19,12 @@ describe 'Main app' do
 
   describe 'signature verification' do
     it 'does not work if tokens do not match' do
-      ENV['SECRET_TOKEN']='notarealtoken'
+      ENV['PUBLISHER_SECRET_TOKEN']='notarealtoken'
       expect(helpers.signatures_match?(incoming, valid_sig)).to eql(false)
     end
 
     it 'does work if tokens match' do
-      ENV['SECRET_TOKEN']='sosecret'
+      ENV['PUBLISHER_SECRET_TOKEN']='sosecret'
       expect(helpers.signatures_match?(incoming, valid_sig)).to eql(true)
     end
   end
