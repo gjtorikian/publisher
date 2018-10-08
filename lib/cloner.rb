@@ -97,7 +97,8 @@ class Cloner
   end
 
   def report_error(command, command_output)
-    body = <<~MARKDOWN
+    body = []
+    body << <<~MARKDOWN
     Hey, I'm really sorry about this, but there was some kind of error when I tried to publish the last time, from #{sha}:
 
     ```
@@ -118,7 +119,7 @@ class Cloner
       MARKDOWN
     end
 
-    client.create_issue originating_repo, "Publisher failed to publish #{sha[0..6]}", body
+    client.create_issue originating_repo, "Publisher failed to publish #{sha[0..6]}", body.join("\n")
   end
 
   def git_init
